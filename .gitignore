@@ -1,0 +1,11 @@
+*.db
+*.state
+traffic.state
+*.tar.gz
+*.bak
+*.backup
+private-screenshots/
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp
