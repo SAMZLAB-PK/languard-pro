@@ -1,1 +1,0 @@
-LanGuard Pro — OpenWrt/ImmortalWrt LAN + Tailscale dashboard with realtime speed, usage tracking, static IP, device block, speed limits, data limits, and mobile-friendly themes.
