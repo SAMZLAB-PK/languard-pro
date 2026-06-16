@@ -1,0 +1,46 @@
+#!/bin/sh
+mkdir -p /etc/ispdash /root/languard-backups
+
+touch /etc/ispdash/devices.db
+touch /etc/ispdash/blocked.db
+touch /etc/ispdash/names.db
+touch /etc/ispdash/deleted.db
+touch /etc/ispdash/staticips.db
+touch /etc/ispdash/limits.db
+touch /etc/ispdash/device_usage.db
+touch /etc/ispdash/usage.db
+touch /etc/ispdash/traffic.state
+touch /etc/ispdash/trusted.db
+touch /etc/ispdash/schedules.db
+touch /etc/ispdash/schedule_blocks.db
+touch /etc/ispdash/audit.log
+touch /etc/ispdash/unknown_policy
+
+chmod 755 /www/cgi-bin/*.sh 2>/dev/null
+chmod 755 /root/languard-*.sh 2>/dev/null
+
+CRON="/etc/crontabs/root"
+touch "$CRON"
+
+add_cron(){
+  LINE="$1"
+  grep -Fq "$LINE" "$CRON" 2>/dev/null || echo "$LINE" >> "$CRON"
+}
+
+# Safe core engines
+[ -x /root/languard-sync-devices.sh ] && add_cron "* * * * * /root/languard-sync-devices.sh >/dev/null 2>&1"
+[ -x /root/languard-apply-blocks.sh ] && add_cron "* * * * * /root/languard-apply-blocks.sh >/dev/null 2>&1"
+[ -x /root/languard-limits-engine.sh ] && add_cron "* * * * * /root/languard-limits-engine.sh >/dev/null 2>&1"
+[ -x /root/languard-traffic-stats.sh ] && add_cron "* * * * * /root/languard-traffic-stats.sh >/dev/null 2>&1"
+[ -x /root/languard-perdevice-usage.sh ] && add_cron "* * * * * /root/languard-perdevice-usage.sh >/dev/null 2>&1"
+[ -x /root/languard-auto-backup.sh ] && add_cron "15 3 * * * /root/languard-auto-backup.sh >/dev/null 2>&1"
+
+# Unknown auto-block and schedule enforcer are intentionally NOT enabled by default.
+# They can block devices automatically, so enable manually only after testing.
+
+echo "$(date '+%F %T %Z')|local|package_installed|languard-pro" >> /etc/ispdash/audit.log 2>/dev/null
+
+/etc/init.d/cron restart >/dev/null 2>&1
+/etc/init.d/uhttpd restart >/dev/null 2>&1
+
+exit 0

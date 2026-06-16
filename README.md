@@ -1,57 +1,76 @@
 # LanGuard Pro
 
-LanGuard Pro is a lightweight LAN and Tailscale device dashboard for OpenWrt / ImmortalWrt routers.
+LanGuard Pro is a lightweight CGI dashboard for OpenWrt and ImmortalWrt.
 
 ## Features
 
-- LAN device dashboard
-- Tailscale device visibility
-- Editable device names
-- Static DHCP IP reservation from dashboard
-- Device block and unblock
-- Delete and restore device view
-- Realtime WAN download and upload
-- Per-device realtime download and upload
-- Daily, monthly, and total usage tracking
-- Per-device speed limit
-- Per-device monthly data limit
-- Mobile-friendly dashboard
-- Theme system including ImmortalWrt/LuCI-style theme
+- Device dashboard
+- Block/unblock/delete/restore devices
+- Speed and data limits
+- Usage tracking
+- Health page
+- Tools page
+- Backup and restore
+- Reports
+- Security/trusted device view
+- Device details and activity insights
+- Router password login
 
-## Recommended system
+## Packages
 
-- OpenWrt / ImmortalWrt 22.03 or newer
-- firewall4 / nftables system
-- uhttpd CGI enabled
-- LAN bridge named br-lan
+This release includes:
+
+- `dist/languard-pro_2026.06.16-r1_all.ipk` for opkg-based OpenWrt
+- `dist/languard-pro-2026.06.16-r1.apk` for apk-based OpenWrt/ImmortalWrt
 
 ## Install
 
-SSH into router and run:
+Copy this folder to your router, then run:
 
-    cd /tmp
-    wget -O languard-pro.tar.gz https://github.com/SAMZLAB-PK/languard-pro/archive/refs/heads/main.tar.gz
-    tar -xzf languard-pro.tar.gz
-    cd languard-pro-main
-    chmod +x install.sh
-    ./install.sh
+```sh
+sh install.sh
+```
 
-Open dashboard:
+Or install manually:
 
-    http://ROUTER-IP/cgi-bin/devices.sh
+### apk-based ImmortalWrt/OpenWrt
 
-Example:
+```sh
+apk add --allow-untrusted dist/languard-pro-2026.06.16-r1.apk
+```
 
-    http://192.168.1.1/cgi-bin/devices.sh
+### opkg-based OpenWrt
 
-## Uninstall
+```sh
+opkg install dist/languard-pro_2026.06.16-r1_all.ipk
+```
 
-    cd /tmp/languard-pro-main
-    chmod +x uninstall.sh
-    ./uninstall.sh
+## Open Dashboard
 
-## Privacy
+```text
+http://192.168.10.1/cgi-bin/languard-login.sh
+```
 
-Do not upload runtime files from /etc/ispdash to GitHub. They may contain private device names, MAC addresses, IP addresses, usage history, limits, blocked devices, and deleted devices.
+Login with your router username and password. Usually:
 
-The installer creates clean empty runtime databases automatically.
+```text
+Username: root
+Password: your router/LuCI password
+```
+
+## Privacy note
+
+Runtime device data is not included in the package:
+
+- device databases
+- names
+- usage logs
+- audit logs
+- backups
+- login configuration
+
+These files are created on the router after installation.
+
+## Safety note
+
+Unknown-device auto-block and schedule enforcer are not enabled by default. Enable them manually only after testing.

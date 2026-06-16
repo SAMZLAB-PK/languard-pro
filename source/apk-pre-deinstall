@@ -1,0 +1,19 @@
+#!/bin/sh
+CRON="/etc/crontabs/root"
+
+if [ -f "$CRON" ]; then
+  grep -vF "/root/languard-sync-devices.sh" "$CRON" | \
+  grep -vF "/root/languard-apply-blocks.sh" | \
+  grep -vF "/root/languard-limits-engine.sh" | \
+  grep -vF "/root/languard-traffic-stats.sh" | \
+  grep -vF "/root/languard-perdevice-usage.sh" | \
+  grep -vF "/root/languard-auto-backup.sh" | \
+  grep -vF "/root/languard-unknown-watch.sh" | \
+  grep -vF "/root/languard-schedule-enforcer.sh" > "$CRON.tmp" 2>/dev/null
+  mv "$CRON.tmp" "$CRON" 2>/dev/null
+fi
+
+/etc/init.d/cron restart >/dev/null 2>&1
+/etc/init.d/uhttpd restart >/dev/null 2>&1
+
+exit 0

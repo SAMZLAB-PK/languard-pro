@@ -1,0 +1,9 @@
+Package: languard-pro
+Version: 2026.06.16-r1
+Architecture: all
+Maintainer: LanGuard Pro
+Section: net
+Priority: optional
+Description: LanGuard Pro dashboard for OpenWrt and ImmortalWrt.
+ A lightweight CGI dashboard for device monitoring, blocking, speed/data limits,
+ audit logs, backups, health checks, reports, trusted devices, and device insights.
